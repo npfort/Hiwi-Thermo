@@ -110,10 +110,11 @@ def ideal_properties(T, V, species, ref=None, Jmax=15):
     elif species == "n":    # Eq.(13)
         p_coeff = ideal_state_pure(T, V, "p", ref, Jmax)
         o_coeff = ideal_state_pure(T, V, "o", ref, Jmax)
-        # Mixing rule for U, H, G, Cp and Cv
-        out = {k: 0.25 * p_coeff[k] + 0.75 * o_coeff[k] for k in ("U", "H", "G", "Cp", "Cv")}
-        # Mixing rule for S (not from the paper)
+        # Mixing rule for U, H, Cp and Cv
+        out = {k: 0.25 * p_coeff[k] + 0.75 * o_coeff[k] for k in ("U", "H", "Cp", "Cv")}
+        # Mixing rule for S and G (not from the paper, includes mixing entropy)
         out["S"] = 0.25 * p_coeff["S"] + 0.75 * o_coeff["S"] - R*(0.25*np.log(0.25) + 0.75*np.log(0.75))
+        out["G"] = 0.25 * p_coeff["G"] + 0.75 * o_coeff["G"] + R*T*(0.25*np.log(0.25) + 0.75*np.log(0.75))
         # Partition Function
         out["Q"] = p_coeff["Q"]**0.25 * o_coeff["Q"]**0.75   
         return out
